@@ -42,13 +42,13 @@ public class FlightCriteriaValidator implements Validator {
 				&& flightCriteria.getDateTo() == null && flightCriteria.getDateFrom() == null) {
 			
 			errors.rejectValue("from",
-					ErrorMessage.MISSING_REQUIRED.getMessage("to, dateFrom and dateTo"));
+					ErrorMessage.MISSING_REQUIRED_PARAMS.getMessage());
 			
 		} else {
 
 			// "from" parameter validations
 			if (StringUtils.isEmpty(flightCriteria.getFrom())) {
-				errors.rejectValue("from", ErrorMessage.MISSING_REQUIRED.getMessage("from"));
+				errors.rejectValue("from", ErrorMessage.MISSING_REQUIRED_PARAMS.getMessage());
 			} else if (!configuration.getValidAirportCodes().contains(flightCriteria.getFrom())) {
 				errors.rejectValue("from", ErrorMessage.INVALID_AIRPORT_CODE.getMessage("from"));
 			}
@@ -66,14 +66,14 @@ public class FlightCriteriaValidator implements Validator {
 			// "dateFrom" parameter validations
 			if (flightCriteria.getDateFrom() == null) {
 				errors.rejectValue("dateFrom",
-						ErrorMessage.MISSING_REQUIRED.getMessage("dateFrom"));
+						ErrorMessage.MISSING_REQUIRED_PARAMS.getMessage());
 			} else if (flightCriteria.getDateFrom().isBefore(LocalDate.now())) {
 				errors.rejectValue("dateFrom", ErrorMessage.DATE_IN_PAST.getMessage("dateFrom"));
 			}
 
 			// dateTo parameter validation
 			if (flightCriteria.getDateTo() == null) {
-				errors.rejectValue("dateTo", ErrorMessage.MISSING_REQUIRED.getMessage("dateTo"));
+				errors.rejectValue("dateTo", ErrorMessage.MISSING_REQUIRED_PARAMS.getMessage());
 			} else if (flightCriteria.getDateTo().isBefore(LocalDate.now())) {
 				errors.rejectValue("dateTo", ErrorMessage.DATE_IN_PAST.getMessage("dateTo"));
 			}
