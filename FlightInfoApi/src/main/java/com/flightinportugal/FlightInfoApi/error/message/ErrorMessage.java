@@ -6,7 +6,7 @@ public enum ErrorMessage {
 
 	UNEXPECTED_ERROR_RETRIEVING_FLIGHTS("An unexpected error occurred while attempting to retrieve flights"),
 	FLIGHT_NOT_FOUND("No flights were found that match the specified parameters."),
-	MISSING_REQUIRED("Request is missing the required parameter: {0}"),
+	MISSING_REQUIRED_PARAMS("Request is missing required query parameters"),
 	EQUAL_VALUES("The value of {0} and {1} cannot be equal."),
 	INVALID_AIRPORT_CODE("The airport code specified in {0} is not valid."),
 	DATE_IN_PAST("The date specified in {0} must not be in the past."),
