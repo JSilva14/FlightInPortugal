@@ -19,6 +19,7 @@ import com.flightinportugal.FlightInfoApi.kiwiclient.KiwiWebClient;
 import com.flightinportugal.FlightInfoApi.kiwiclient.model.KiwiFlightsResponse;
 import com.flightinportugal.FlightInfoApi.model.FlightsAverageResponse;
 import com.flightinportugal.FlightInfoApi.model.FlightsResponse;
+import com.flightinportugal.FlightInfoApi.service.FlightInfoService;
 
 /**
  * Contains mappings for the HTTP requests provided by this API
@@ -31,7 +32,7 @@ public class FlightInfoController {
 	FlightCriteriaValidator validator;
 
 	@Autowired
-	KiwiWebClient kiwiWebClient;
+	FlightInfoService service;
 
 	// TODO: Swagger
 	// TODO: tests
@@ -40,71 +41,26 @@ public class FlightInfoController {
 	public ResponseEntity<List<FlightsResponse>> getFlights(FlightCriteria flightCriteria,
 			BindingResult bindingResult) {
 
-		ResponseEntity<List<FlightsResponse>> flightsResponse = null;
-		KiwiFlightsResponse kiwiFlights = null;
-
 		validator.validate(flightCriteria, bindingResult);
-
 		if (bindingResult.hasErrors()) {
-			// Should pass all the errors instead of the
-			// first so that all of them are shown to the user at
-			// the same time
 			throw new FlightCriteriaValidationException(bindingResult.getFieldError().getCode());
 		}
 
-		try {
-			// Request flights from Kiwi API
-			kiwiFlights = kiwiWebClient.getFlights(flightCriteria);
-			// Map retrieved response to a list of FlightInfo
-			List<FlightsResponse> flights = new ArrayList<FlightsResponse>();
-			kiwiFlights.getData().forEach(
-					kiwiFlight -> flights.add(FlightsResponse.fromKiwiFlightData(kiwiFlight)));
-
-			// Create response entity from list
-			flightsResponse = new ResponseEntity<List<FlightsResponse>>(flights, HttpStatus.OK);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new FlightInfoApiException(
-					ErrorMessage.UNEXPECTED_ERROR_RETRIEVING_FLIGHTS.getMessage(), e);
-		}
-
-		return flightsResponse;
-
+		return new ResponseEntity<List<FlightsResponse>>(service.getFlights(flightCriteria),
+				HttpStatus.OK);
 	}
 
 	@GetMapping(path = "/flights/avg", produces = "application/json")
-	public ResponseEntity<FlightsAverageResponse> getFlightsAverage(
+	public ResponseEntity<FlightsAverageResponse> getAverageFlightPrices(
 			FlightCriteria flightCriteria, BindingResult bindingResult) {
 
-		ResponseEntity<FlightsAverageResponse> flightsAverageResponse = null;
-		KiwiFlightsResponse kiwiFlights = null;
-
 		validator.validate(flightCriteria, bindingResult);
-
 		if (bindingResult.hasErrors()) {
-			// Should pass all the errors instead of the
-			// first so that all of them are shown to the user at
-			// the same time
 			throw new FlightCriteriaValidationException(bindingResult.getFieldError().getCode());
 		}
 
-		try {
-			// Request flights from Kiwi API
-			kiwiFlights = kiwiWebClient.getFlights(flightCriteria);
-
-			// Create response entity from list
-			flightsAverageResponse = new ResponseEntity<FlightsAverageResponse>(
-					FlightsAverageResponse.fromKiwiFlightsResponse(kiwiFlights), HttpStatus.OK);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new FlightInfoApiException(
-					ErrorMessage.UNEXPECTED_ERROR_RETRIEVING_FLIGHTS.getMessage(), e);
-		}
-
-		return flightsAverageResponse;
-
+		return new ResponseEntity<FlightsAverageResponse>(
+				service.getAverageFlightPrices(flightCriteria), HttpStatus.OK);
 	}
 
 }

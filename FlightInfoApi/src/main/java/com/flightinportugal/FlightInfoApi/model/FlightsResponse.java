@@ -1,8 +1,12 @@
 package com.flightinportugal.FlightInfoApi.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.TimeZone;
 
-import com.flightinportugal.FlightInfoApi.configuration.FlightInfoApiConfiguration;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.flightinportugal.FlightInfoApi.kiwiclient.model.KiwiFlightData;
 import com.flightinportugal.FlightInfoApi.kiwiclient.model.KiwiFlightsResponse;
 
@@ -13,7 +17,7 @@ import com.flightinportugal.FlightInfoApi.kiwiclient.model.KiwiFlightsResponse;
 public class FlightsResponse {
 
 	private static final String CURRENCY = "EUR";
-	
+
 	/**
 	 * Flight origin
 	 */
@@ -22,6 +26,15 @@ public class FlightsResponse {
 	 * Flight destination
 	 */
 	private String destination;
+	/**
+	 * Flights departure time
+	 */
+	private Long departureTime;
+	/**
+	 * FLights arrival time
+	 */
+
+	private Long arrivalTime;
 	/**
 	 * Currency for the specified price
 	 */
@@ -47,18 +60,19 @@ public class FlightsResponse {
 		super();
 	}
 
-	public FlightsResponse(String origin, String destination, String currency, Double price,
-			BagPrices bagPrices, Double distance, String duration) {
+	public FlightsResponse(String origin, String destination, Long departureTime, Long arrivalTime,
+			String currency, Double price, BagPrices bagPrices, Double distance, String duration) {
 		super();
 		this.origin = origin;
 		this.destination = destination;
+		this.departureTime = departureTime;
+		this.arrivalTime = arrivalTime;
 		this.currency = currency;
 		this.price = price;
 		this.bagPrices = bagPrices;
 		this.distance = distance;
 		this.duration = duration;
 	}
-	
 
 	public String getOrigin() {
 		return origin;
@@ -74,6 +88,22 @@ public class FlightsResponse {
 
 	public void setDestination(String destination) {
 		this.destination = destination;
+	}
+
+	public Long getDepartureTime() {
+		return departureTime;
+	}
+
+	public void setDepartureTime(Long departureTime) {
+		this.departureTime = departureTime;
+	}
+
+	public Long getArrivalTime() {
+		return arrivalTime;
+	}
+
+	public void setArrivalTime(Long arrivalTime) {
+		this.arrivalTime = arrivalTime;
 	}
 
 	public String getCurrency() {
@@ -124,11 +154,14 @@ public class FlightsResponse {
 	 *                       {@link KiwiFlightsResponse}
 	 * @return the instance of {@link FlightsResponse} that was built
 	 */
-
 	public static FlightsResponse fromKiwiFlightData(KiwiFlightData kiwiFlightData) {
 
+		BagPrices bagPrices = new BagPrices(kiwiFlightData.getBagsPrice().get("1"),
+				kiwiFlightData.getBagsPrice().get("2"));
+
 		FlightsResponse flightInfo = new FlightsResponse(kiwiFlightData.getFlyFrom(),
-				kiwiFlightData.getFlyTo(), CURRENCY, kiwiFlightData.getPrice(), null,
+				kiwiFlightData.getFlyTo(), kiwiFlightData.getdTime(), kiwiFlightData.getaTime(),
+				CURRENCY, kiwiFlightData.getPrice(), bagPrices,
 				kiwiFlightData.getDistance(), kiwiFlightData.getFlyDuration());
 
 		return flightInfo;

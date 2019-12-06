@@ -100,26 +100,41 @@ public class FlightsAverageResponse {
 
 		List<KiwiFlightData> kiwiFlights = kiwiFlightsResponse.getData();
 
-		//TODO: get bag prices average
-		
 		return new FlightsAverageResponse(kiwiFlights.get(0).getFlyFrom(),
-				kiwiFlights.get(1).getFlyTo(), CURRENCY, calculateAverageFromList(kiwiFlights),
-				null);
-
+				kiwiFlights.get(1).getFlyTo(), CURRENCY, calculateAveragePriceFromList(kiwiFlights),
+				calculateAverageBagPrices(kiwiFlights));
 	}
 
-	private static Double calculateAverageFromList(List<KiwiFlightData> kiwiFlights) {
+	private static Double calculateAveragePriceFromList(List<KiwiFlightData> kiwiFlights) {
 
-		Double averagePrice = 0.0;
+		Double sumPrices = 0.0;
 
 		for (KiwiFlightData kiwiFlight : kiwiFlights) {
-			averagePrice += kiwiFlight.getPrice();
+			sumPrices += kiwiFlight.getPrice();
 		}
 
-		BigDecimal bd = BigDecimal.valueOf(averagePrice / kiwiFlights.size());
+		BigDecimal bd = BigDecimal.valueOf(sumPrices / kiwiFlights.size());
 		bd = bd.setScale(2, RoundingMode.HALF_UP);
 
 		return bd.doubleValue();
 
+	}
+
+	private static BagPrices calculateAverageBagPrices(List<KiwiFlightData> kiwiFlights) {
+
+		Double sumBagOne = 0.0;
+		Double sumBagTwo = 0.0;
+
+		for (KiwiFlightData kiwiFlight : kiwiFlights) {
+			sumBagOne += kiwiFlight.getBagsPrice().get("1");
+			sumBagTwo += kiwiFlight.getBagsPrice().get("2");
+		}
+
+		BigDecimal averageOne = BigDecimal.valueOf(sumBagOne / kiwiFlights.size());
+		averageOne = averageOne.setScale(2, RoundingMode.HALF_UP);
+		BigDecimal averageTwo = BigDecimal.valueOf(sumBagTwo / kiwiFlights.size());
+		averageTwo = averageTwo.setScale(2, RoundingMode.HALF_UP);
+
+		return new BagPrices(averageOne.doubleValue(), averageTwo.doubleValue());
 	}
 }

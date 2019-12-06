@@ -41,6 +41,14 @@ public class KiwiWebClient {
 	@Autowired
 	ObjectMapper mapper;
 
+	/**
+	 * Requests flights from Kiwi API's "flights" endpoint using
+	 * {@link FlightCriteria} as query parameters
+	 * 
+	 * @param flightCriteria an object containing query paramaters to apply
+	 * @return the response body mapped to a {@link KiwiFlightsResponse}
+	 * @throws Exception
+	 */
 	public KiwiFlightsResponse getFlights(FlightCriteria flightCriteria) throws Exception {
 
 		// Convert flightCriteria to a Map of queryParameters

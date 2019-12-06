@@ -1,5 +1,8 @@
 package com.flightinportugal.FlightInfoApi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Contains information about bag costs
  *
@@ -7,52 +10,38 @@ package com.flightinportugal.FlightInfoApi.model;
 public class BagPrices {
 
 	/**
-	 * Currency applied to bag prices
-	 */
-	private String currency;
-	/**
 	 * The price of one checked bag
 	 */
-	private Double bagOne;
+	private Double oneBag;
 	/**
 	 * The price of two checked bags
 	 */
-	private Double bagTwo;
+	private Double twoBags;
 
 	public BagPrices() {
 		super();
 	}
 
-	public BagPrices(String currency, Double bagOne, Double bagTwo) {
+	public BagPrices(Double oneBag, Double twoBags) {
 		super();
-		this.currency = currency;
-		this.bagOne = bagOne;
-		this.bagTwo = bagTwo;
+		this.oneBag = oneBag;
+		this.twoBags = twoBags;
 	}
 
-	public String getCurrency() {
-		return currency;
+	public Double getOneBag() {
+		return oneBag;
 	}
 
-	public void setCurrency(String currency) {
-		this.currency = currency;
+	public void setOneBag(Double oneBag) {
+		this.oneBag = oneBag;
 	}
 
-	public Double getBagOne() {
-		return bagOne;
+	public Double getTwoBags() {
+		return twoBags;
 	}
 
-	public void setBagOne(Double bagOne) {
-		this.bagOne = bagOne;
+	public void setTwoBags(Double twoBags) {
+		this.twoBags = twoBags;
 	}
 
-	public Double getBagTwo() {
-		return bagTwo;
-	}
-
-	public void setBagTwo(Double bagTwo) {
-		this.bagTwo = bagTwo;
-	}
-
-	
 }

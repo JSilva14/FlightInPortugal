@@ -29,6 +29,8 @@ public class KiwiFlightData {
 	private String flyDuration;
 	@JsonProperty("countryTo")
 	private KiwiFlightCountryInfo countryTo;
+	@JsonProperty("bags_price")
+	private Map<String, Double> bagsPrice;
 	@JsonProperty("aTimeUTC")
 	private Long aTimeUTC;
 	@JsonProperty("distance")
@@ -64,11 +66,13 @@ public class KiwiFlightData {
 		super();
 	}
 
-	public KiwiFlightData(String mapIdFrom, String returnDuration, String flyTo, Map<String, String> conversion,
-			String deepLink, String mapIdTo, Integer nightsInDest, String id, String flyDuration,
-			KiwiFlightCountryInfo countryTo, Long aTimeUTC, Double distance, Double price, List<String> typeFlights,
-			String cityTo, String flyFrom, Long dTimeUTC, KiwiFlightCountryInfo countryFrom, Long dTime, String bookingToken,
-			String cityFrom, Long aTime, Boolean virtualInterlining, Boolean throwAwayTicketing,
+	public KiwiFlightData(String mapIdFrom, String returnDuration, String flyTo,
+			Map<String, String> conversion, String deepLink, String mapIdTo, Integer nightsInDest,
+			String id, String flyDuration, KiwiFlightCountryInfo countryTo,
+			Map<String, Double> bagsPrice, Long aTimeUTC, Double distance, Double price,
+			List<String> typeFlights, String cityTo, String flyFrom, Long dTimeUTC,
+			KiwiFlightCountryInfo countryFrom, Long dTime, String bookingToken, String cityFrom,
+			Long aTime, Boolean virtualInterlining, Boolean throwAwayTicketing,
 			List<KiwiFlightRoute> route) {
 		super();
 		this.mapIdFrom = mapIdFrom;
@@ -81,6 +85,7 @@ public class KiwiFlightData {
 		this.id = id;
 		this.flyDuration = flyDuration;
 		this.countryTo = countryTo;
+		this.bagsPrice = bagsPrice;
 		this.aTimeUTC = aTimeUTC;
 		this.distance = distance;
 		this.price = price;
@@ -176,6 +181,14 @@ public class KiwiFlightData {
 
 	public void setCountryTo(KiwiFlightCountryInfo countryTo) {
 		this.countryTo = countryTo;
+	}
+
+	public Map<String, Double> getBagsPrice() {
+		return bagsPrice;
+	}
+
+	public void setBagsPrice(Map<String, Double> bagsPrice) {
+		this.bagsPrice = bagsPrice;
 	}
 
 	public Long getaTimeUTC() {
@@ -300,15 +313,16 @@ public class KiwiFlightData {
 
 	@Override
 	public String toString() {
-		return "FlightData [mapIdFrom=" + mapIdFrom + ", returnDuration=" + returnDuration + ", flyTo=" + flyTo
-				+ ", conversion=" + conversion + ", deepLink=" + deepLink + ", mapIdTo=" + mapIdTo + ", nightsInDest="
-				+ nightsInDest + ", id=" + id + ", flyDuration=" + flyDuration + ", countryTo=" + countryTo
-				+ ", aTimeUTC=" + aTimeUTC + ", distance=" + distance + ", price=" + price + ", typeFlights="
-				+ typeFlights + ", cityTo=" + cityTo + ", flyFrom=" + flyFrom + ", dTimeUTC=" + dTimeUTC
-				+ ", countryFrom=" + countryFrom + ", dTime=" + dTime + ", bookingToken=" + bookingToken + ", cityFrom="
-				+ cityFrom + ", aTime=" + aTime + ", virtualInterlining=" + virtualInterlining + ", throwAwayTicketing="
+		return "FlightData [mapIdFrom=" + mapIdFrom + ", returnDuration=" + returnDuration
+				+ ", flyTo=" + flyTo + ", conversion=" + conversion + ", deepLink=" + deepLink
+				+ ", mapIdTo=" + mapIdTo + ", nightsInDest=" + nightsInDest + ", id=" + id
+				+ ", flyDuration=" + flyDuration + ", countryTo=" + countryTo + ", aTimeUTC="
+				+ aTimeUTC + ", distance=" + distance + ", price=" + price + ", typeFlights="
+				+ typeFlights + ", cityTo=" + cityTo + ", flyFrom=" + flyFrom + ", dTimeUTC="
+				+ dTimeUTC + ", countryFrom=" + countryFrom + ", dTime=" + dTime + ", bookingToken="
+				+ bookingToken + ", cityFrom=" + cityFrom + ", aTime=" + aTime
+				+ ", virtualInterlining=" + virtualInterlining + ", throwAwayTicketing="
 				+ throwAwayTicketing + ", route=" + route + "]";
 	}
 
-	
 }
