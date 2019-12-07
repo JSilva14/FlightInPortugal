@@ -13,22 +13,13 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "flightinfoapi.config")
 @Component
 public class FlightInfoApiConfiguration {
-
-	private String apiVersion;
 	private String kiwiApiBaseEndpoint;
 	private String kiwiApiFlightsEndpoint;
 	private String kiwiPartner;
 	private String currency;
+	private String datePattern;
 	private List<String> validAirportCodes;
 	private List<String> validAirlineCodes;
-
-	public String getApiVersion() {
-		return apiVersion;
-	}
-
-	public void setApiVersion(String apiVersion) {
-		this.apiVersion = apiVersion;
-	}
 
 	public String getKiwiApiBaseEndpoint() {
 		return kiwiApiBaseEndpoint;
@@ -60,6 +51,14 @@ public class FlightInfoApiConfiguration {
 
 	public void setCurrency(String currency) {
 		this.currency = currency;
+	}
+
+	public String getDatePattern() {
+		return datePattern;
+	}
+
+	public void setDatePattern(String datePattern) {
+		this.datePattern = datePattern;
 	}
 
 	public List<String> getValidAirportCodes() {

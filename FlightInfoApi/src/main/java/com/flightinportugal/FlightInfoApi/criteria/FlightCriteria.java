@@ -1,18 +1,9 @@
 package com.flightinportugal.FlightInfoApi.criteria;
 
-import java.time.LocalDate;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 /**
  * A POJO representation of the possible query params of this API's "Get
@@ -46,26 +37,22 @@ public class FlightCriteria {
 	 * Search for flights after this date in dd/MM/yyyy format.
 	 */
 	@JsonProperty("date_from")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonSerialize(using = LocalDateSerializer.class)
-	private LocalDate dateFrom;
+	private String dateFrom;
 	/**
 	 * <strong>Required</strong>
 	 * <p>
 	 * Search for flights until this date.
 	 */
 	@JsonProperty("date_to")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonSerialize(using = LocalDateSerializer.class)
-	private LocalDate dateTo;
+	private String dateTo;
 
 	public FlightCriteria() {
 		super();
 	}
 
-	public FlightCriteria(String to, String from, LocalDate dateFrom, LocalDate dateTo) {
+	public FlightCriteria(String to, String from, String dateFrom, String dateTo) {
 		super();
 		this.to = to;
 		this.from = from;
@@ -94,19 +81,19 @@ public class FlightCriteria {
 		}
 	}
 
-	public LocalDate getDateFrom() {
+	public String getDateFrom() {
 		return dateFrom;
 	}
 
-	public void setDateFrom(LocalDate dateFrom) {
+	public void setDateFrom(String dateFrom) {
 		this.dateFrom = dateFrom;
 	}
 
-	public LocalDate getDateTo() {
+	public String getDateTo() {
 		return dateTo;
 	}
 
-	public void setDateTo(LocalDate dateTo) {
+	public void setDateTo(String dateTo) {
 		this.dateTo = dateTo;
 	}
 
