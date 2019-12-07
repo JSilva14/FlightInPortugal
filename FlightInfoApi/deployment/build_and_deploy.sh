@@ -9,7 +9,7 @@ then
   mv apache-maven-3.0.5 maven
   export M2_HOME=/opt/maven
   export PATH=${M2_HOME}/bin:${PATH}
-  cd ..
+  cd ../FlightInfoApi
   echo "Building..."
   mvn clean install
   echo "moving jar file to deployment "
