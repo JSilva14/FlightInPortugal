@@ -17,6 +17,8 @@
 
 	<properties>
 		<java.version>13</java.version>
+		<docker.image.prefix>flightinportugal</docker.image.prefix>
+		<docker.image.name>flightinfoapi</docker.image.name>
 	</properties>
 
 	<dependencies>
@@ -70,6 +72,7 @@
 	</dependencies>
 
 	<build>
+	<finalName>flightinfoapi</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

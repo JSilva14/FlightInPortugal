@@ -2,10 +2,8 @@ package com.flightinportugal.FlightInfoApi.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.flightinportugal.FlightInfoApi.criteria.FlightCriteria;
 import com.flightinportugal.FlightInfoApi.criteria.validator.FlightCriteriaValidator;
 import com.flightinportugal.FlightInfoApi.error.message.ErrorMessage;
@@ -19,55 +17,55 @@ import com.flightinportugal.FlightInfoApi.model.FlightsResponse;
 @Service
 public class FlightInfoService {
 
-	@Autowired
-	FlightCriteriaValidator validator;
+  @Autowired
+  FlightCriteriaValidator validator;
 
-	@Autowired
-	KiwiWebClient kiwiWebClient;
+  @Autowired
+  KiwiWebClient kiwiWebClient;
 
-	public List<FlightsResponse> getFlights(FlightCriteria flightCriteria) {
+  public List<FlightsResponse> getFlights(FlightCriteria flightCriteria) {
 
-		KiwiFlightsResponse kiwiFlights = null;
-		List<FlightsResponse> flights = new ArrayList<FlightsResponse>();
+    KiwiFlightsResponse kiwiFlights = null;
+    List<FlightsResponse> flights = new ArrayList<FlightsResponse>();
 
-		try {
-			// Request flights from Kiwi API
-			kiwiFlights = kiwiWebClient.getFlights(flightCriteria);
+    try {
+      // Request flights from Kiwi API
+      kiwiFlights = kiwiWebClient.getFlights(flightCriteria);
 
-			// Map retrieved response to a list of FlightInfo
-			for (KiwiFlightData kiwiFlight : kiwiFlights.getData()) {
-				flights.add(FlightsResponse.fromKiwiFlightData(kiwiFlight));
-			}
+      // Map retrieved response to a list of FlightInfo
+      for (KiwiFlightData kiwiFlight : kiwiFlights.getData()) {
+        flights.add(FlightsResponse.fromKiwiFlightData(kiwiFlight));
+      }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new FlightInfoApiException(
-					ErrorMessage.UNEXPECTED_ERROR_RETRIEVING_FLIGHTS.getMessage(), e);
-		}
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new FlightInfoApiException(
+          ErrorMessage.UNEXPECTED_ERROR_RETRIEVING_FLIGHTS.getMessage(), e);
+    }
 
-		return flights;
-	}
-	
-	
-	public FlightsAverageResponse getAverageFlightPrices(FlightCriteria flightCriteria) {
+    return flights;
+  }
 
-		FlightsAverageResponse flightsAverageResponse = null;
-		KiwiFlightsResponse kiwiFlights = null;
 
-		try {
-			// Request flights from Kiwi API
-			kiwiFlights = kiwiWebClient.getFlights(flightCriteria);
+  public FlightsAverageResponse getAverageFlightPrices(FlightCriteria flightCriteria) {
 
-			// Create response entity from list
-			flightsAverageResponse = FlightsAverageResponse.fromKiwiFlightsResponse(kiwiFlights);
+    FlightsAverageResponse flightsAverageResponse = null;
+    KiwiFlightsResponse kiwiFlights = null;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new FlightInfoApiException(
-					ErrorMessage.UNEXPECTED_ERROR_RETRIEVING_FLIGHTS.getMessage(), e);
-		}
+    try {
+      // Request flights from Kiwi API
+      kiwiFlights = kiwiWebClient.getFlights(flightCriteria);
 
-		return flightsAverageResponse;
-	}
+      // Create response entity from list
+      flightsAverageResponse = FlightsAverageResponse.fromKiwiFlightsResponse(kiwiFlights);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new FlightInfoApiException(
+          ErrorMessage.UNEXPECTED_ERROR_RETRIEVING_FLIGHTS.getMessage(), e);
+    }
+
+    return flightsAverageResponse;
+  }
 
 }
