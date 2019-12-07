@@ -1,6 +1,5 @@
 package com.flightinportugal.FlightInfoApi.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.flightinportugal.FlightInfoApi.criteria.FlightCriteria;
 import com.flightinportugal.FlightInfoApi.criteria.validator.FlightCriteriaValidator;
-import com.flightinportugal.FlightInfoApi.error.message.ErrorMessage;
 import com.flightinportugal.FlightInfoApi.exception.FlightCriteriaValidationException;
-import com.flightinportugal.FlightInfoApi.exception.FlightInfoApiException;
-import com.flightinportugal.FlightInfoApi.kiwiclient.KiwiWebClient;
-import com.flightinportugal.FlightInfoApi.kiwiclient.model.KiwiFlightsResponse;
 import com.flightinportugal.FlightInfoApi.model.FlightsAverageResponse;
 import com.flightinportugal.FlightInfoApi.model.FlightsResponse;
 import com.flightinportugal.FlightInfoApi.service.FlightInfoService;
@@ -35,8 +30,6 @@ public class FlightInfoController {
 	FlightInfoService service;
 
 	// TODO: Swagger
-	// TODO: tests
-
 	@GetMapping(path = "/flights", produces = "application/json")
 	public ResponseEntity<List<FlightsResponse>> getFlights(FlightCriteria flightCriteria,
 			BindingResult bindingResult) {

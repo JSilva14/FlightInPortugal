@@ -84,7 +84,7 @@ public class FlightInfoControllerTest {
 	/*
 	 * getFlights() tests
 	 */
-	
+
 	@Test
 	public void getFlights_ValidRequest_ShouldReturn200AndListOfFlights() throws Exception {
 
@@ -242,6 +242,20 @@ public class FlightInfoControllerTest {
 	}
 
 	@Test
+	public void getFlights_MissingDateToParameter_ShouldReturn400AndRelevantMessage()
+			throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/flights?from=LIS&to=OPO&dateFrom=" + tomorrowDate)
+				.accept(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		assertEquals(400, result.getResponse().getStatus());
+		assertTrue(result.getResponse().getContentAsString()
+				.contains(ErrorMessage.MISSING_REQUIRED_PARAMS.getMessage()));
+	}
+
+	@Test
 	public void getFlights_DateToIsBeforeDateFrom_ShouldReturn400AndRelevantMessage()
 			throws Exception {
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -279,5 +293,181 @@ public class FlightInfoControllerTest {
 		assertEquals(200, result.getResponse().getStatus());
 		assertEquals(result.getResponse().getContentAsString(),
 				expectedGetAverageFlightPricesResponseBody);
+	}
+
+	@Test
+	public void getAverageFlightPrices_NoParametersGiven_ShouldReturn400AndAppropriateMessage()
+			throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/flights/avg")
+				.accept(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		assertEquals(400, result.getResponse().getStatus());
+		assertTrue(result.getResponse().getContentAsString()
+				.contains(ErrorMessage.MISSING_REQUIRED_PARAMS.getMessage()));
+	}
+
+	@Test
+	public void getAverageFlightPrices_InvalidFromParameter_ShouldReturn400AndRelevantMessage()
+			throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/flights/avg?from=12345&to=OPO&dateFrom=" + tomorrowDate + "&dateTo="
+						+ tomorrowDate)
+				.accept(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		assertEquals(400, result.getResponse().getStatus());
+		assertTrue(result.getResponse().getContentAsString()
+				.contains(ErrorMessage.INVALID_AIRPORT_CODE.getMessage()));
+	}
+
+	@Test
+	public void getAverageFlightPrices_MissingFromParameter_ShouldReturn400AndRelevantMessage()
+			throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/flights/avg?to=OPO&dateFrom=" + tomorrowDate + "&dateTo=" + tomorrowDate)
+				.accept(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		assertEquals(400, result.getResponse().getStatus());
+		assertTrue(result.getResponse().getContentAsString()
+				.contains(ErrorMessage.MISSING_REQUIRED_PARAMS.getMessage()));
+	}
+
+	@Test
+	public void getAverageFlightPrices_InvalidToParameter_ShouldReturn400AndRelevantMessage()
+			throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/flights/avg?from=LIS&to=12345&dateFrom=" + tomorrowDate + "&dateTo="
+						+ tomorrowDate)
+				.accept(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		assertEquals(400, result.getResponse().getStatus());
+		assertTrue(result.getResponse().getContentAsString()
+				.contains(ErrorMessage.INVALID_AIRPORT_CODE.getMessage()));
+	}
+
+	@Test
+	public void getAverageFlightPrices_MissingToParameter_ShouldReturn200AndFlightAverageResponse()
+			throws Exception {
+		Mockito.when(service.getAverageFlightPrices(Mockito.any(FlightCriteria.class)))
+				.thenReturn(mockFlightsAverageResponse);
+
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/flights/avg?from=LIS&dateFrom=" + tomorrowDate + "&dateTo=" + tomorrowDate)
+				.accept(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		assertEquals(200, result.getResponse().getStatus());
+		assertEquals(expectedGetAverageFlightPricesResponseBody,
+				result.getResponse().getContentAsString());
+	}
+
+	@Test
+	public void getAverageFlightPrices_InvalidDateFromParameter_ShouldReturn400AndRelevantMessage()
+			throws Exception {
+		
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/flights/avg?from=LIS&to=OPO&dateFrom=invalid&dateTo=" + tomorrowDate)
+				.accept(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		assertEquals(400, result.getResponse().getStatus());
+		assertTrue(result.getResponse().getContentAsString()
+				.contains(ErrorMessage.INVALID_DATE.getMessage()));
+	}
+
+	@Test
+	public void getAverageFlightPrices_DateFromParameterIsInPast_ShouldReturn400AndRelevantMessage()
+			throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/flights/avg?from=LIS&to=OPO&dateFrom=" + yesterdayDate + "&dateTo="
+						+ tomorrowDate)
+				.accept(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		assertEquals(400, result.getResponse().getStatus());
+		assertTrue(result.getResponse().getContentAsString()
+				.contains(ErrorMessage.DATE_IN_PAST.getMessage()));
+	}
+
+	@Test
+	public void getAverageFlightPrices_MissingDateFromParameter_ShouldReturn400AndRelevantMessage()
+			throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/flights/avg?from=LIS&to=OPO&dateTo=" + tomorrowDate)
+				.accept(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		assertEquals(400, result.getResponse().getStatus());
+		assertTrue(result.getResponse().getContentAsString()
+				.contains(ErrorMessage.MISSING_REQUIRED_PARAMS.getMessage()));
+	}
+
+	@Test
+	public void getAverageFlightPrices_InvalidDateToParameter_ShouldReturn400AndRelevantMessage()
+			throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/flights/avg?from=LIS&to=OPO&dateFrom=" + tomorrowDate + "&dateTo=invalid")
+				.accept(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		assertEquals(400, result.getResponse().getStatus());
+		assertTrue(result.getResponse().getContentAsString()
+				.contains(ErrorMessage.INVALID_DATE.getMessage()));
+	}
+
+	@Test
+	public void getAverageFlightPrices_DateToParameterIsInPast_ShouldReturn400AndRelevantMessage()
+			throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/flights/avg?from=LIS&to=OPO&dateFrom=" + tomorrowDate + "&dateTo="
+						+ yesterdayDate)
+				.accept(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		assertEquals(400, result.getResponse().getStatus());
+		assertTrue(result.getResponse().getContentAsString()
+				.contains(ErrorMessage.DATE_IN_PAST.getMessage()));
+	}
+
+	@Test
+	public void getAverageFlightPrices_MissingDateToParameter_ShouldReturn400AndRelevantMessage()
+			throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/flights/avg?from=LIS&to=OPO&dateFrom=" + tomorrowDate)
+				.accept(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		assertEquals(400, result.getResponse().getStatus());
+		assertTrue(result.getResponse().getContentAsString()
+				.contains(ErrorMessage.MISSING_REQUIRED_PARAMS.getMessage()));
+	}
+
+	@Test
+	public void getAverageFlightPrices_DateToIsBeforeDateFrom_ShouldReturn400AndRelevantMessage()
+			throws Exception {
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/flights/avg?from=LIS&to=OPO&dateFrom=" + afterTomorrowDate + "&dateTo="
+						+ tomorrowDate)
+				.accept(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		assertEquals(400, result.getResponse().getStatus());
+		assertTrue(result.getResponse().getContentAsString()
+				.contains(ErrorMessage.DATE_COMPARISON.getMessage()));
 	}
 }

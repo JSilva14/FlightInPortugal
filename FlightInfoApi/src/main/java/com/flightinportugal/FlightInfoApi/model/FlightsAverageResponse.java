@@ -101,11 +101,18 @@ public class FlightsAverageResponse {
 		List<KiwiFlightData> kiwiFlights = kiwiFlightsResponse.getData();
 
 		return new FlightsAverageResponse(kiwiFlights.get(0).getFlyFrom(),
-				kiwiFlights.get(1).getFlyTo(), CURRENCY, calculateAveragePriceFromList(kiwiFlights),
+				kiwiFlights.get(1).getFlyTo(), CURRENCY, calculateAverageFlightPrice(kiwiFlights),
 				calculateAverageBagPrices(kiwiFlights));
 	}
 
-	private static Double calculateAveragePriceFromList(List<KiwiFlightData> kiwiFlights) {
+	/**
+	 * Calculates the average price of flights in a List of {@link KiwiFlightData}
+	 * instances
+	 * 
+	 * @param kiwiFlights the list of flights to use in the calculation
+	 * @return the average price of all flights
+	 */
+	private static Double calculateAverageFlightPrice(List<KiwiFlightData> kiwiFlights) {
 
 		Double sumPrices = 0.0;
 
@@ -120,19 +127,46 @@ public class FlightsAverageResponse {
 
 	}
 
+	/**
+	 * Calculates the average price of bag one and bag two for flights in a List of
+	 * {@link KiwiFlightData} instances
+	 * 
+	 * @param kiwiFlights the list of flights to use in the calculation
+	 * @return a {@link BagPrices} instance containing the average prices of bags
+	 */
 	private static BagPrices calculateAverageBagPrices(List<KiwiFlightData> kiwiFlights) {
 
 		Double sumBagOne = 0.0;
 		Double sumBagTwo = 0.0;
 
+		// These are used as the T value in calculating avg as sum/T
+		// There may be some cases where the value of a bag is not present in the
+		// response and therefore we can't just divide the sum by the total amount of
+		// flights.
+		// It is necessary to check the total amount of times that a bag price was
+		// present
+		int totalOccurrencesOfBagOne = 0;
+		int totalOccurencesOfBagTwo = 0;
+
 		for (KiwiFlightData kiwiFlight : kiwiFlights) {
-			sumBagOne += kiwiFlight.getBagsPrice().get("1");
-			sumBagTwo += kiwiFlight.getBagsPrice().get("2");
+
+			Double priceOfOne = kiwiFlight.getBagsPrice().get("1");
+			Double priceOfTwo = kiwiFlight.getBagsPrice().get("2");
+
+			if (priceOfOne != null) {
+				sumBagOne += priceOfOne;
+				totalOccurrencesOfBagOne += 1;
+			}
+
+			if (priceOfTwo != null) {
+				sumBagTwo += priceOfTwo;
+				totalOccurencesOfBagTwo += 1;
+			}
 		}
 
-		BigDecimal averageOne = BigDecimal.valueOf(sumBagOne / kiwiFlights.size());
+		BigDecimal averageOne = BigDecimal.valueOf(sumBagOne / totalOccurrencesOfBagOne);
 		averageOne = averageOne.setScale(2, RoundingMode.HALF_UP);
-		BigDecimal averageTwo = BigDecimal.valueOf(sumBagTwo / kiwiFlights.size());
+		BigDecimal averageTwo = BigDecimal.valueOf(sumBagTwo / totalOccurencesOfBagTwo);
 		averageTwo = averageTwo.setScale(2, RoundingMode.HALF_UP);
 
 		return new BagPrices(averageOne.doubleValue(), averageTwo.doubleValue());
