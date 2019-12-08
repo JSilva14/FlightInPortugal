@@ -1,26 +1,24 @@
 package com.flightinportugal.FlightInfoApi.controller.interceptor;
 
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import com.flightinportugal.FlightInfoApi.entity.FlightApiRequestEntity;
+import com.flightinportugal.FlightInfoApi.error.message.ErrorMessage;
 import com.flightinportugal.FlightInfoApi.repository.FlightsRequestRepository;
 
 /**
  * Intercepts requests made to FlightInfoApiController methods and performs before and after
- * operations
+ * operations. It is mainly used to log request info and store it in MongoDB
  *
  */
 @Component
@@ -45,7 +43,7 @@ public class FlightInfoApiInterceptor extends HandlerInterceptorAdapter {
       while (headerNames.hasMoreElements()) {
         String currentHeader = headerNames.nextElement();
         log.info(currentHeader + ": " + request.getHeader(currentHeader));
-        headers.put(headerNames.nextElement(), request.getHeader(headerNames.nextElement()));
+        headers.put(currentHeader, request.getHeader(currentHeader));
       }
     }
     super.postHandle(request, response, handler, modelAndView);
@@ -55,13 +53,29 @@ public class FlightInfoApiInterceptor extends HandlerInterceptorAdapter {
   public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
       Object handler, Exception ex) throws Exception {
 
-    HttpHeaders headers = response.getHeaderNames().stream()
-        .collect(Collectors.toMap(Function.identity(), h -> new ArrayList<>(response.getHeaders(h)),
-            (oldValue, newValue) -> newValue, HttpHeaders::new));
+    Enumeration<String> headerNames = request.getHeaderNames();
+    Map<String, Object> headers = new HashMap<String, Object>();
+
+    if (headerNames != null) {
+      while (headerNames.hasMoreElements()) {
+        String currentHeader = headerNames.nextElement();
+        headers.put(currentHeader, request.getHeader(currentHeader));
+      }
+    }
 
     log.info(
         "Request handling finished with status code: " + HttpStatus.valueOf(response.getStatus()));
 
+    try {
+      log.info("Attempting to store request data in database: ");
+
+      repository.save(new FlightApiRequestEntity(headers, request.getRequestURI(),
+          request.getQueryString(), response.getStatus()));
+
+      log.info("Request stored successfully");
+    } catch (Exception e) {
+      log.error(ErrorMessage.UNEXPECTED_ERROR_STORING_REQUEST.getMessage(), e);
+    }
 
     super.afterCompletion(request, response, handler, ex);
   }

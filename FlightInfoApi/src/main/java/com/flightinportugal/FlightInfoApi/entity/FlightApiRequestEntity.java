@@ -13,36 +13,52 @@ import com.flightinportugal.FlightInfoApi.controller.FlightInfoController;
 public class FlightApiRequestEntity {
 
   @Id
-  public String id;
+  private String id;
   /**
    * The request headers
    */
-  public Map<String, Object> headers;
+  private Map<String, Object> headers;
   /**
    * The endpoint to which this request was made
    */
-  public String endpoint;
-  public String queryString;
+  private String endpoint;
+  /**
+   * Query string attached to the url string
+   */
+  private String queryString;
+
+  /**
+   * The response status
+   */
+  private Integer responseStatus;
 
   public FlightApiRequestEntity() {
     super();
   }
 
-  public FlightApiRequestEntity(String endpoint, String queryString) {
+
+  public FlightApiRequestEntity(Map<String, Object> headers, String endpoint, String queryString,
+      Integer responseStatus) {
     super();
+    this.headers = headers;
     this.endpoint = endpoint;
     this.queryString = queryString;
+    this.responseStatus = responseStatus;
   }
 
   public String getId() {
     return id;
   }
 
+  public Map<String, Object> getHeaders() {
+    return headers;
+  }
+
   public String getEndpoint() {
     return endpoint;
   }
 
-  public String getqueryString() {
+  public String getQueryString() {
     return queryString;
   }
 
@@ -50,11 +66,27 @@ public class FlightApiRequestEntity {
     this.id = id;
   }
 
+  public void setHeaders(Map<String, Object> headers) {
+    this.headers = headers;
+  }
+
   public void setEndpoint(String endpoint) {
     this.endpoint = endpoint;
   }
 
-  public void setqueryString(String queryString) {
+  public void setQueryString(String queryString) {
     this.queryString = queryString;
   }
+
+  public Integer getResponseStatus() {
+    return responseStatus;
+  }
+
+  public void setResponseStatus(Integer responseStatus) {
+    this.responseStatus = responseStatus;
+  }
+
+
+
+  // TODO: get timestamp from object id
 }
