@@ -1,4 +1,4 @@
-package com.flightinportugal.FlightInfoApi.kiwiclient.model;
+package com.flightinportugal.FlightInfoApi.external.api.model;
 
 import java.util.List;
 import java.util.Map;

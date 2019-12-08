@@ -15,11 +15,14 @@ import com.flightinportugal.FlightInfoApi.exception.FlightCriteriaValidationExce
 import com.flightinportugal.FlightInfoApi.model.FlightsAverageResponse;
 import com.flightinportugal.FlightInfoApi.model.FlightsResponse;
 import com.flightinportugal.FlightInfoApi.service.FlightInfoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Contains mappings for the HTTP requests provided by this API
  * 
  */
+@Tag(name = "Flights", description = "Flight Information")
 @RestController
 public class FlightInfoController {
 
@@ -31,7 +34,16 @@ public class FlightInfoController {
   @Autowired
   FlightInfoService service;
 
-  // TODO: Swagger
+  /**
+   * Retrieves information for all flights that match the parameters specified in
+   * {@code flightCriteria}
+   * 
+   * @param flightCriteria Query parameters to apply
+   * @param bindingResult Used for criteria validation purposes
+   * @return {@link ResponseEntity} containing a list of flights
+   */
+  @Operation(summary = "Get Flights",
+      description = "Retrieves a list of Flights based on the specified parameters")
   @GetMapping(path = "/flights", produces = "application/json")
   public ResponseEntity<List<FlightsResponse>> getFlights(FlightCriteria flightCriteria,
       BindingResult bindingResult) {
@@ -40,11 +52,20 @@ public class FlightInfoController {
     if (bindingResult.hasErrors()) {
       throw new FlightCriteriaValidationException(bindingResult.getFieldError().getCode());
     }
+    log.info("Valid criteria");
 
     return new ResponseEntity<List<FlightsResponse>>(service.getFlights(flightCriteria),
         HttpStatus.OK);
   }
 
+  /**
+   * 
+   * @param flightCriteria
+   * @param bindingResult
+   * @return
+   */
+  @Operation(summary = "Get Average Flight Prices",
+      description = "Returns the average prices for the list of flights that match the specified parameters")
   @GetMapping(path = "/flights/avg", produces = "application/json")
   public ResponseEntity<FlightsAverageResponse> getAverageFlightPrices(
       FlightCriteria flightCriteria, BindingResult bindingResult) {
@@ -53,6 +74,7 @@ public class FlightInfoController {
     if (bindingResult.hasErrors()) {
       throw new FlightCriteriaValidationException(bindingResult.getFieldError().getCode());
     }
+    log.info("Valid criteria");
 
     return new ResponseEntity<FlightsAverageResponse>(
         service.getAverageFlightPrices(flightCriteria), HttpStatus.OK);

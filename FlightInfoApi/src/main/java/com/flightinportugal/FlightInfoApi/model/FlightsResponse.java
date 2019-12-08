@@ -7,8 +7,8 @@ import java.util.TimeZone;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.flightinportugal.FlightInfoApi.kiwiclient.model.KiwiFlightData;
-import com.flightinportugal.FlightInfoApi.kiwiclient.model.KiwiFlightsResponse;
+import com.flightinportugal.FlightInfoApi.external.api.model.KiwiFlightData;
+import com.flightinportugal.FlightInfoApi.external.api.model.KiwiFlightsResponse;
 
 /**
  * Model class for this API's "Get Flights" response

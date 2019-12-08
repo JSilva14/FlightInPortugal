@@ -1,5 +1,6 @@
-package com.flightinportugal.FlightInfoApi.entity;
+package com.flightinportugal.FlightInfoApi.model;
 
+import java.time.Instant;
 import java.util.Map;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,6 +15,10 @@ public class FlightApiRequestEntity {
 
   @Id
   private String id;
+  /**
+   * The timestamp for when this request occurred
+   */
+  private Instant timestamp;
   /**
    * The request headers
    */
@@ -32,14 +37,26 @@ public class FlightApiRequestEntity {
    */
   private Integer responseStatus;
 
+
   public FlightApiRequestEntity() {
     super();
   }
 
-
-  public FlightApiRequestEntity(Map<String, Object> headers, String endpoint, String queryString,
-      Integer responseStatus) {
+  public FlightApiRequestEntity(String id, Instant timestamp, Map<String, Object> headers,
+      String endpoint, String queryString, Integer responseStatus) {
     super();
+    this.id = id;
+    this.timestamp = timestamp;
+    this.headers = headers;
+    this.endpoint = endpoint;
+    this.queryString = queryString;
+    this.responseStatus = responseStatus;
+  }
+
+  public FlightApiRequestEntity(Instant timestamp, Map<String, Object> headers, String endpoint,
+      String queryString, Integer responseStatus) {
+    super();
+    this.timestamp = timestamp;
     this.headers = headers;
     this.endpoint = endpoint;
     this.queryString = queryString;
@@ -86,7 +103,11 @@ public class FlightApiRequestEntity {
     this.responseStatus = responseStatus;
   }
 
+  public Instant getTimestamp() {
+    return timestamp;
+  }
 
-
-  // TODO: get timestamp from object id
+  public void setTimestamp(Instant timestamp) {
+    this.timestamp = timestamp;
+  }
 }

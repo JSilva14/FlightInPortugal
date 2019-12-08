@@ -3,6 +3,8 @@ package com.flightinportugal.FlightInfoApi.criteria.validator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -22,6 +24,8 @@ import reactor.util.StringUtils;
 @Component
 public class FlightCriteriaValidator implements Validator {
 
+  private static final Logger log = LoggerFactory.getLogger(FlightCriteriaValidator.class);
+
   @Autowired
   FlightInfoApiProperties properties;
 
@@ -31,9 +35,10 @@ public class FlightCriteriaValidator implements Validator {
     return FlightCriteria.class.equals(clazz);
   }
 
-  // TODO: cleanup method
   @Override
   public void validate(Object target, Errors errors) {
+
+    log.info("Validating criteria...");
 
     FlightCriteria flightCriteria = (FlightCriteria) target;
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(properties.getDatePattern());

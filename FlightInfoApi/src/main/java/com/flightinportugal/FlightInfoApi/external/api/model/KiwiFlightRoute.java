@@ -1,4 +1,4 @@
-package com.flightinportugal.FlightInfoApi.kiwiclient.model;
+package com.flightinportugal.FlightInfoApi.external.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

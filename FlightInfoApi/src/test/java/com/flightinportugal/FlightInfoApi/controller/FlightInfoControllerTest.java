@@ -8,6 +8,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,9 +24,10 @@ import com.flightinportugal.FlightInfoApi.error.message.ErrorMessage;
 import com.flightinportugal.FlightInfoApi.model.BagPrices;
 import com.flightinportugal.FlightInfoApi.model.FlightsAverageResponse;
 import com.flightinportugal.FlightInfoApi.model.FlightsResponse;
+import com.flightinportugal.FlightInfoApi.repository.FlightsRequestRepository;
 import com.flightinportugal.FlightInfoApi.service.FlightInfoService;
 
-@SpringBootTest()
+@SpringBootTest
 @AutoConfigureMockMvc
 public class FlightInfoControllerTest {
 
@@ -32,13 +35,13 @@ public class FlightInfoControllerTest {
   private MockMvc mockMvc;
 
   @MockBean
+  FlightsRequestRepository repository;
+
+  @MockBean
   FlightInfoService service;
 
   private final List<FlightsResponse> mockFlightsResponseList = List.of(new FlightsResponse("OPO",
       "LIS", 1575784800L, 1575788400L, "EUR", 100.0, new BagPrices(10.0, 20.0), 200.0, "1h"));
-
-  private final FlightsAverageResponse mockFlightsAverageResponse =
-      new FlightsAverageResponse("OPO", "LIS", "EUR", 100.0, new BagPrices(10.0, 20.0));
 
   private final String expectedGetFlightsResponseBody = "[{\"origin\":\"OPO\","
       + "\"destination\":\"LIS\"," + "\"departureTime\":1575784800," + "\"arrivalTime\":1575788400,"
@@ -94,12 +97,13 @@ public class FlightInfoControllerTest {
     MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
     assertEquals(200, result.getResponse().getStatus());
-    assertEquals(result.getResponse().getContentAsString(), expectedGetFlightsResponseBody);
+    JSONAssert.assertEquals(result.getResponse().getContentAsString(),
+        expectedGetFlightsResponseBody, JSONCompareMode.LENIENT);
 
   }
 
   @Test
-  public void getFlights_NoParametersGiven_ShouldReturn400AndAppropriateMessage() throws Exception {
+  public void getFlights_NoParametersGiven_ShouldReturn400AndRelevantMessage() throws Exception {
     RequestBuilder requestBuilder =
         MockMvcRequestBuilders.get("/flights").accept(MediaType.APPLICATION_JSON);
 
@@ -161,7 +165,8 @@ public class FlightInfoControllerTest {
     MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
     assertEquals(200, result.getResponse().getStatus());
-    assertEquals(result.getResponse().getContentAsString(), expectedGetFlightsResponseBody);
+    JSONAssert.assertEquals(result.getResponse().getContentAsString(),
+        expectedGetFlightsResponseBody, JSONCompareMode.LENIENT);
   }
 
   @Test
@@ -261,9 +266,6 @@ public class FlightInfoControllerTest {
         .contains(ErrorMessage.DATE_COMPARISON.getMessage()));
   }
 
-  // todo: TESTS
-  // TO BASED ON FROM IS CORRECT
-
   /*
    * getAverageFlightPrices Tests
    */
@@ -272,22 +274,25 @@ public class FlightInfoControllerTest {
   public void getAverageFlightPrices_ValidRequest_ShouldReturn200AndFlightAverageResponse()
       throws Exception {
 
+    FlightsAverageResponse mockFlightsAverageResponse = new FlightsAverageResponse(tomorrowDate,
+        afterTomorrowDate, "OPO", "LIS", "EUR", 100.0, new BagPrices(10.0, 20.0));
+
     Mockito.when(service.getAverageFlightPrices(Mockito.any(FlightCriteria.class)))
         .thenReturn(mockFlightsAverageResponse);
 
-    RequestBuilder requestBuilder =
-        MockMvcRequestBuilders.get("/flights/avg?from=LIS&dateFrom=08/12/2019&dateTo=08/12/2019")
-            .accept(MediaType.APPLICATION_JSON);
+    RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
+        "/flights/avg?from=LIS&to=OPO&dateFrom=" + tomorrowDate + "&dateTo=" + afterTomorrowDate)
+        .accept(MediaType.APPLICATION_JSON);
 
     MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
     assertEquals(200, result.getResponse().getStatus());
-    assertEquals(result.getResponse().getContentAsString(),
-        expectedGetAverageFlightPricesResponseBody);
+    JSONAssert.assertEquals(expectedGetAverageFlightPricesResponseBody,
+        result.getResponse().getContentAsString(), JSONCompareMode.LENIENT);
   }
 
   @Test
-  public void getAverageFlightPrices_NoParametersGiven_ShouldReturn400AndAppropriateMessage()
+  public void getAverageFlightPrices_NoParametersGiven_ShouldReturn400AndRelevantMessage()
       throws Exception {
     RequestBuilder requestBuilder =
         MockMvcRequestBuilders.get("/flights/avg").accept(MediaType.APPLICATION_JSON);
@@ -344,18 +349,22 @@ public class FlightInfoControllerTest {
   @Test
   public void getAverageFlightPrices_MissingToParameter_ShouldReturn200AndFlightAverageResponse()
       throws Exception {
+
+    FlightsAverageResponse mockFlightsAverageResponse = new FlightsAverageResponse(tomorrowDate,
+        afterTomorrowDate, "OPO", "LIS", "EUR", 100.0, new BagPrices(10.0, 20.0));
+
     Mockito.when(service.getAverageFlightPrices(Mockito.any(FlightCriteria.class)))
         .thenReturn(mockFlightsAverageResponse);
 
     RequestBuilder requestBuilder = MockMvcRequestBuilders
-        .get("/flights/avg?from=LIS&dateFrom=" + tomorrowDate + "&dateTo=" + tomorrowDate)
+        .get("/flights/avg?from=LIS&dateFrom=" + tomorrowDate + "&dateTo=" + afterTomorrowDate)
         .accept(MediaType.APPLICATION_JSON);
 
     MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
     assertEquals(200, result.getResponse().getStatus());
-    assertEquals(expectedGetAverageFlightPricesResponseBody,
-        result.getResponse().getContentAsString());
+    JSONAssert.assertEquals(expectedGetAverageFlightPricesResponseBody,
+        result.getResponse().getContentAsString(), JSONCompareMode.LENIENT);
   }
 
   @Test

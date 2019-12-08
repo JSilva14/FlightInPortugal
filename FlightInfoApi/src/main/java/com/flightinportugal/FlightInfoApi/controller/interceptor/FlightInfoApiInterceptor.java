@@ -1,5 +1,6 @@
 package com.flightinportugal.FlightInfoApi.controller.interceptor;
 
+import java.time.Instant;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,8 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import com.flightinportugal.FlightInfoApi.entity.FlightApiRequestEntity;
 import com.flightinportugal.FlightInfoApi.error.message.ErrorMessage;
+import com.flightinportugal.FlightInfoApi.model.FlightApiRequestEntity;
 import com.flightinportugal.FlightInfoApi.repository.FlightsRequestRepository;
 
 /**
@@ -69,7 +70,7 @@ public class FlightInfoApiInterceptor extends HandlerInterceptorAdapter {
     try {
       log.info("Attempting to store request data in database: ");
 
-      repository.save(new FlightApiRequestEntity(headers, request.getRequestURI(),
+      repository.save(new FlightApiRequestEntity(Instant.now(), headers, request.getRequestURI(),
           request.getQueryString(), response.getStatus()));
 
       log.info("Request stored successfully");
