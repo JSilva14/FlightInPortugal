@@ -8,39 +8,24 @@ Also contains endpoints to get information about requests made to flight informa
 Clone the repository into your prefered directory.
 
 ### Prerequisites
-#### For setup with Docker
-*Docker Engine:
+
+*Docker Engine (Recommended version 19.03.5):
 	[Docker for Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 	[Docker Desktop for Windows](https://docs.docker.com/docker-for-windows/install/)
 	[Docker Destop for Mac](https://docs.docker.com/docker-for-mac/install/)
+*[Docker Compose](https://docs.docker.com/compose/install/) (Recommended version 1.25.0)
 
-*[Docker Compose](https://docs.docker.com/compose/install/)
 
-
-####For local setup
+#### For local setup
 * [Java JDK 13](https://www.oracle.com/technetwork/java/javase/downloads/jdk13-downloads-5672538.html)
 * [Maven 3.6+](https://maven.apache.org/download.cgi)
-* A java IDE like [Spring Tool Suite](https://spring.io/tools) or [IntelliJ IDEA](https://www.jetbrains.com/idea/)
+* A java IDE with Spring support like [Spring Tool Suite](https://spring.io/tools) or [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 
 
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+To execute the docker environment
 
 ## Running the tests
 
