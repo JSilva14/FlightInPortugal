@@ -90,3 +90,32 @@ There you will see the api's Swagger page which contains 6 endpoints:
 
 ## Code Breakdown
 
+The application is built using Spring Boot and written in java. It is based on Spring MVC and also uses Spring Web Client to make requests to the external API provided by Kiwi: https://docs.kiwi.com/
+
+As seen above, the application is split into two main components: Flights and Requests.
+
+### Flights
+
+Used to retrieve information about flights as well as average flight and bag prices.  
+
+**Basic Flow:**
+
+1. When a request is made to /flights or /flights/avg, it is handled by Controller methods in **FlightInfoController**.
+2. The controller methods perform validation on the specified query parameters (**FlightCriteria**) by calling **FlightCriteriaValidator**.
+3. If the criteria are valid, the controller calls the corresponding **FlightInfoService** method. This class is used to remove business logic from the controllers and keeping them as simple and clean as possible.
+4. **FlightInfoService** takes the **FlightCriteria** specified and calls the **getFlights** method on **KiwiWebClient**.
+5. **KiwiWebClient** makes the request to Kiwi's Flights API by using the same query parameters that it received in the **FlightCriteria** argument. This will obtain a list of flights that is then mapped into a **KiwiFlightsResponse** object and returned to **FlightInfoService**.
+6. **FlightInfoService** performs business logic over the retrieved **KiwiFlightsResponse**. It will either map it into a list of **FlightsResponse** or calculate the average flight and bag prices for all the flights returned and build a **FlightsAverageResponse**.
+7. The controller receives the data processed by **FlightInfoService** and wraps it in a **ResponseEntity** with the appropriate Http Status code.
+
+One of the requirements of this challenge was to store the data of requests made to Flights endpoints in a database.
+In this case, the database used is MongoDB.
+
+**How is request data stored:**
+
+Requests made to a controller can be intercepted using **org.springframework.web.servlet.handler.HandlerInterceptorAdapter**.
+
+- When a request is made to "/flights" or "/flights/avg", it is intercepted by **FlightInfoApiInterceptor**.
+- By overriding **HandlerInterceptorAdapter's afterCompletion** method, it is possible to get information about the request and the response.
+- This information is used to create and instance of **FlightApiRequestEntity** which is stored in MongoDb by calling the **FlightsRequestRepository** interface which extends **org.springframework.data.mongodb.repository.MongoRepository**.
+
