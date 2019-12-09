@@ -45,7 +45,7 @@ After the jar has been created, the source code is removed from the container an
 #### To run using the IDE:
 
 1. Edit the **spring.data.mongodb.uri** property in **application.properties**:
-	- If you have already performed `docker-compose up` you can use the dockerized MongoDB instance. Just remember to stop the flightinfoapi container to prevent port conflicts: ´docker stop flightinfoapi´.  
+	- If you have already performed `docker-compose up` you can use the dockerized MongoDB instance. Just remember to set the property spring.data.mongodb.uri=mongodb://localhost and stop the flightinfoapi container to prevent port conflicts: ´docker stop flightinfoapi´.  
 	- For convenience, a Mongo Atlas instance has also been provided (check application.properties for more info).
 	
 2. Import the FlightInfoApi project into your IDE. If using Eclipse or SpringToolSuite it may be necessary to update the project:
