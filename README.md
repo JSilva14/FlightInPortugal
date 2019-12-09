@@ -122,7 +122,7 @@ In order to achieve this, a **FlightInfoApiInterceptor** (which extends **Handle
 
 **Error Handling: **
 
-- If an Exception occurs during any point in the processes described below, it gets propagated back to the controller and handled automatically by **FlightInfoApiControllerAdvice** using the @RestControllerAdvice and @ExceptionHandler annotations.
+- If an Exception occurs during any point in the processes described above, it gets propagated back to the controller and handled automatically by **FlightInfoApiControllerAdvice** using the @RestControllerAdvice and @ExceptionHandler annotations.
 - Whenever possible, Exceptions are caught and wrapped with custom Exceptions so that **FlightInfoApiControllerAdvice** knows how to handle them.
 - Basically **FlightInfoApiControllerAdvice** sees what kind of Exception it received and builds a response based on it.
 - In the example below we can see how **FlightInfoApiControllerAdvice** handles a **FlightCriteriaValidationException**:
@@ -147,8 +147,8 @@ Used to retrieve information about or delete requests made to "Flights" endpoint
 
 **Basic Flow: **
 
-1. When a request is made to /requests or /requests/{id}, it is handled by Controller methods in **FlightInfoRequestController**.
-2. All of the controller make calls to the appropriate method in **FlightsRequestRepository**. Either findAll, findById, deleteAll, and deleteById.
+1. When a request is made to "/requests" or "/requests/{id}", it is handled by Controller methods in **FlightInfoRequestController**.
+2. All of the controllers make calls to the appropriate method in **FlightsRequestRepository**. Either findAll, findById, deleteAll, or deleteById, depending on the controller method called.
 
 ### API Caching
 
@@ -159,7 +159,7 @@ This will only be useful on the slim chance that another user requests informati
 
 **How caching was implemented: **
 
-- To implement caching, @EnableCaching annotation was added to the FlightInfoApiApplication class.
+- To implement caching, @EnableCaching annotation was added to the FlightInfoApiApplication class which contains the **main** method.
 - In **FlightInfoRequestController**, **@Cacheable("request")** annotation was added to the **getApiRequestById** method. This makes it so that the result of the method for the specified id is added to the cache.
 - Ex: 
 	* When GET http://localhost:8080/requests/5dee6a2bd1db84664aa33a19 is received, initially the data will be retrieved from MongoDB and the result for this id will be added to the cache.
@@ -175,7 +175,7 @@ This will only be useful on the slim chance that another user requests informati
 This project contains unit tests for the controller classes which can be found at src/test/java in the package com.flightinportugal.FlightInfoApi.controller
 
 These tests verify that the controllers return the appropriate response given some valid or invalid criteria.
-To make the test names self-explanatory, the naming convention used was {method being tested}_{conditions}_{Should do this}
+To make the test names self-explanatory, the naming convention used was {method being tested}_{conditions}_{Expected Result}
 
 #### Integration tests
 
