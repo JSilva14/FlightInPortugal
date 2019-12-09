@@ -1,14 +1,20 @@
 package com.flightinportugal.FlightInfoApi.controller;
 
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import com.flightinportugal.FlightInfoApi.error.message.ErrorMessage;
+import com.flightinportugal.FlightInfoApi.exception.RequestNotFoundException;
 import com.flightinportugal.FlightInfoApi.model.FlightApiRequestEntity;
 import com.flightinportugal.FlightInfoApi.repository.FlightsRequestRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,17 +59,65 @@ public class FlightInfoRequestController {
    */
   @Operation(summary = "Delete all Requests",
       description = "Deletes all request info from database")
-  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Requests deleted",
+  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Operation complete",
       content = @Content(schema = @Schema(implementation = Void.class)))})
-  @DeleteMapping(path = "/requests", produces = "application/json")
+  @CacheEvict(cacheNames = "request", allEntries = true)
+  @DeleteMapping(path = "/requests")
   public ResponseEntity<?> deleteApiRequests() {
 
     log.info("Deleting all request data...");
 
     requestRepository.deleteAll();
 
-    log.info("Requests deleted...");
+    log.info("Delete operation complete");
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
+
+  /**
+   * Retrieves the request with the given id
+   * 
+   * @param id The id of the request to retrieve
+   * @return a {@link ResponseEntity} containing a {@link FlightApiRequestEntity} with the givern id
+   */
+  @Operation(summary = "Get Request By Id", description = "Retrieves the request with the given id")
+  @Cacheable("request")
+  @GetMapping(path = "/requests/{id}", produces = "application/json")
+  public ResponseEntity<Optional<FlightApiRequestEntity>> getApiRequestById(
+      @PathVariable("id") String id) {
+
+    log.info("Retrieving request with id: " + id);
+
+    Optional<FlightApiRequestEntity> retrievedRequest = requestRepository.findById(id);
+
+    if (retrievedRequest.isEmpty()) {
+      throw new RequestNotFoundException(ErrorMessage.REQUEST_DATA_NOT_FOUND.getMessage());
+    }
+
+    return new ResponseEntity<Optional<FlightApiRequestEntity>>(retrievedRequest, HttpStatus.OK);
+  }
+
+  /**
+   * Deletes the request with the given id
+   * 
+   * @param id The id of the request to delete
+   * @return a ResponseEntity with status 204 NO CONTENT
+   */
+  @Operation(summary = "Delete Request By Id",
+      description = "Deletes the request with the given id")
+  @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Operation complete",
+      content = @Content(schema = @Schema(implementation = Void.class)))})
+  @CacheEvict(cacheNames = "request", key = "#root.args")
+  @DeleteMapping(path = "/requests/{id}")
+  public ResponseEntity<?> deleteApiRequestById(@PathVariable("id") String id) {
+
+    log.info("Deleting request with id: " + id);
+
+    requestRepository.deleteById(id);
+
+    log.info("Delete operation complete");
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
+
 }

@@ -41,8 +41,7 @@ public class FlightInfoService {
     } catch (ExternalApiException e) {
       throw e;
     } catch (Exception e) {
-      throw new FlightInfoApiException(
-          ErrorMessage.UNEXPECTED_ERROR_RETRIEVING_FLIGHTS.getMessage(), e);
+      throw new FlightInfoApiException(ErrorMessage.UNEXPECTED_ERROR.getMessage(), e);
     }
 
     return flights;
@@ -65,8 +64,7 @@ public class FlightInfoService {
 
     } catch (Exception e) {
       e.printStackTrace();
-      throw new FlightInfoApiException(
-          ErrorMessage.UNEXPECTED_ERROR_RETRIEVING_FLIGHTS.getMessage(), e);
+      throw new FlightInfoApiException(ErrorMessage.UNEXPECTED_ERROR.getMessage(), e);
     }
 
     return flightsAverageResponse;

@@ -1,28 +1,28 @@
 package com.flightinportugal.FlightInfoApi.exception;
 
 /**
- * The default exception class for this API
+ * The default exception class for this API. Used to wrap Exception and provide a custom message
  *
  */
-public class FlightInfoApiException extends RuntimeException{
+public class FlightInfoApiException extends RuntimeException {
 
-	private static final long serialVersionUID = 6943984260522063165L;
+  private static final long serialVersionUID = 6943984260522063165L;
 
-	public FlightInfoApiException() {
-		super();
-	}
-	
-	public FlightInfoApiException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  public FlightInfoApiException() {
+    super();
+  }
 
-	public FlightInfoApiException(String message) {
-		super(message);
-	}
+  public FlightInfoApiException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	public FlightInfoApiException(Throwable cause) {
-		super(cause);
-	}
+  public FlightInfoApiException(String message) {
+    super(message);
+  }
+
+  public FlightInfoApiException(Throwable cause) {
+    super(cause);
+  }
 
 
 }

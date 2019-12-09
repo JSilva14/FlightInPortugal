@@ -9,6 +9,7 @@ import com.flightinportugal.FlightInfoApi.error.FlightInfoApiError;
 import com.flightinportugal.FlightInfoApi.error.message.ErrorMessage;
 import com.flightinportugal.FlightInfoApi.exception.ExternalApiException;
 import com.flightinportugal.FlightInfoApi.exception.FlightCriteriaValidationException;
+import com.flightinportugal.FlightInfoApi.exception.RequestNotFoundException;
 
 /**
  * Class that works as a centralized place to handle all application level exceptions
@@ -35,12 +36,20 @@ public class FlightInfoApiControllerAdvice {
         HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
+  @ExceptionHandler({RequestNotFoundException.class})
+  public ResponseEntity<FlightInfoApiError> handleRequestNotFoundException(
+      RequestNotFoundException e) {
+    log.error(e.getMessage(), e);
+    return new ResponseEntity<FlightInfoApiError>(
+        new FlightInfoApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
+  }
+
   @ExceptionHandler({Exception.class})
   public ResponseEntity<FlightInfoApiError> handleException(Exception e) {
     log.error(e.getMessage(), e);
     return new ResponseEntity<FlightInfoApiError>(
         new FlightInfoApiError(HttpStatus.INTERNAL_SERVER_ERROR,
-            ErrorMessage.UNEXPECTED_ERROR_RETRIEVING_FLIGHTS.getMessage()),
+            ErrorMessage.UNEXPECTED_ERROR.getMessage()),
         HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
