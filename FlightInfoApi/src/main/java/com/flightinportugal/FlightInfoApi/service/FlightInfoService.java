@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.flightinportugal.FlightInfoApi.criteria.FlightCriteria;
-import com.flightinportugal.FlightInfoApi.criteria.validator.FlightCriteriaValidator;
 import com.flightinportugal.FlightInfoApi.error.message.ErrorMessage;
 import com.flightinportugal.FlightInfoApi.exception.ExternalApiException;
 import com.flightinportugal.FlightInfoApi.exception.FlightInfoApiException;
@@ -19,11 +18,15 @@ import com.flightinportugal.FlightInfoApi.model.FlightsResponse;
 public class FlightInfoService {
 
   @Autowired
-  FlightCriteriaValidator validator;
-
-  @Autowired
   KiwiWebClient kiwiWebClient;
 
+  /**
+   * Requests flight data from {@link KiwiWebClient} and builds a list of {@link FlightsResponse} to
+   * sent back to the controller
+   * 
+   * @param flightCriteria a set of parameters to request flight information
+   * @return a list of flights that match the criteria
+   */
   public List<FlightsResponse> getFlights(FlightCriteria flightCriteria) {
 
     KiwiFlightsResponse kiwiFlights = null;
@@ -48,6 +51,13 @@ public class FlightInfoService {
   }
 
 
+  /**
+   * Requests flight data from {@link KiwiWebClient} and builds a {@link FlightsAverageResponse}
+   * containing average flight and bag prices for all the flights that match the criteria
+   * 
+   * @param flightCriteria a set of parameters to request flight information
+   * @return an object containing average flight and bag prices for flights that match the criteria
+   */
   public FlightsAverageResponse getAverageFlightPrices(FlightCriteria flightCriteria) {
 
     FlightsAverageResponse flightsAverageResponse = null;

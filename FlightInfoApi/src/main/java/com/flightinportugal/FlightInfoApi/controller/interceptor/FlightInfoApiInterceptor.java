@@ -30,6 +30,9 @@ public class FlightInfoApiInterceptor extends HandlerInterceptorAdapter {
   @Autowired
   FlightsRequestRepository repository;
 
+  /**
+   * Used to log info about the intercepted request
+   */
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
       ModelAndView modelAndView) throws Exception {
@@ -50,6 +53,10 @@ public class FlightInfoApiInterceptor extends HandlerInterceptorAdapter {
     super.postHandle(request, response, handler, modelAndView);
   }
 
+  /**
+   * After the request is complete, provides relevant logging and stores the request data in the
+   * database through {@link FlightsRequestRepository}
+   */
   @Override
   public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
       Object handler, Exception ex) throws Exception {

@@ -20,6 +20,12 @@ public class FlightInfoApiControllerAdvice {
 
   Logger log = Logger.getLogger(FlightInfoApiControllerAdvice.class);
 
+  /**
+   * Handles FlightCriteriaValidationException
+   * 
+   * @param e the exception to be handled
+   * @return an appropriate ResponseEntity
+   */
   @ExceptionHandler({FlightCriteriaValidationException.class})
   public ResponseEntity<FlightInfoApiError> handleFlightCriteriaValidationException(
       FlightCriteriaValidationException e) {
@@ -28,6 +34,12 @@ public class FlightInfoApiControllerAdvice {
         new FlightInfoApiError(HttpStatus.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
+  /**
+   * Handles ExternalApiException
+   * 
+   * @param e the exception to be handled
+   * @return an appropriate ResponseEntity
+   */
   @ExceptionHandler({ExternalApiException.class})
   public ResponseEntity<FlightInfoApiError> handleExternalApiException(ExternalApiException e) {
     log.error(e.getMessage(), e);
@@ -36,6 +48,12 @@ public class FlightInfoApiControllerAdvice {
         HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
+  /**
+   * Handles RequestNotFoundException
+   * 
+   * @param e the exception to be handled
+   * @return an appropriate ResponseEntity
+   */
   @ExceptionHandler({RequestNotFoundException.class})
   public ResponseEntity<FlightInfoApiError> handleRequestNotFoundException(
       RequestNotFoundException e) {
@@ -44,6 +62,12 @@ public class FlightInfoApiControllerAdvice {
         new FlightInfoApiError(HttpStatus.NOT_FOUND, e.getMessage()), HttpStatus.NOT_FOUND);
   }
 
+  /**
+   * Handles Exception
+   * 
+   * @param e the exception to be handled
+   * @return an appropriate ResponseEntity
+   */
   @ExceptionHandler({Exception.class})
   public ResponseEntity<FlightInfoApiError> handleException(Exception e) {
     log.error(e.getMessage(), e);

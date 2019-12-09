@@ -45,7 +45,7 @@ public class FlightInfoRequestController {
   @Operation(summary = "Get All Requests",
       description = "Retrieves a list of requests made to 'Flights' endpoints")
   @GetMapping(path = "/requests", produces = "application/json")
-  public ResponseEntity<List<FlightApiRequestEntity>> getApiRequests() {
+  public ResponseEntity<List<FlightApiRequestEntity>> getAllApiRequests() {
 
     log.info("Retrieving all request data...");
     return new ResponseEntity<List<FlightApiRequestEntity>>(requestRepository.findAll(),
@@ -63,7 +63,7 @@ public class FlightInfoRequestController {
       content = @Content(schema = @Schema(implementation = Void.class)))})
   @CacheEvict(cacheNames = "request", allEntries = true)
   @DeleteMapping(path = "/requests")
-  public ResponseEntity<?> deleteApiRequests() {
+  public ResponseEntity<?> deleteAllApiRequests() {
 
     log.info("Deleting all request data...");
 

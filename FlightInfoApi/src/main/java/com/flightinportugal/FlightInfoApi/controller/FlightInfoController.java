@@ -59,10 +59,11 @@ public class FlightInfoController {
   }
 
   /**
+   * Retrieves average flight prices and bag prices for flights that match the specified criteria
    * 
-   * @param flightCriteria
-   * @param bindingResult
-   * @return
+   * @param flightCriteria a set of parameters to filter flights
+   * @param bindingResult Used for criteria validation purposes
+   * @return {@link ResponseEntity} containing a {@link FlightsAverageResponse} instance
    */
   @Operation(summary = "Get Average Flight Prices",
       description = "Returns the average prices for the list of flights that match the specified parameters")
