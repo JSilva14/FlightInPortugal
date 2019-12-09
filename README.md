@@ -168,6 +168,20 @@ This will only be useful on the slim chance that another user requests informati
 - **@CacheEvict(cacheNames = "request", allEntries = true)** annotation was added to the **deleteAllApiRequests** method. This will remove all data from the cache when all requests are removed from the database.
 
 
+## Logging
+
+Loggin was configured by adding the following properties to application.properties:
+- logging.level.root=info
+- logging.level.com.flightinportugal=debug
+- logging.file.path=logs
+- logging.file.name=${logging.file.path}/log.log
+- logging.file.total-size-cap= 1000000
+
+This way, logs are appended to a log.log file and logs from previous days are compressed and persisted in teh following format "log.log.2019-12-08.0.gz".
+To view logs when running on docker, use `docker logs flightinfoapi`
+
+**NOTE:** to optimize logging, a volume should have been configured to store all logs and allow better log readability.
+
 ### Tests
 
 #### Unit tests
