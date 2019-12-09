@@ -28,7 +28,7 @@ Clone the repository into your prefered directory.
 
 **In your terminal, navigate to the directory that contains the docker-compose.yaml file and execute the command:**
 
-`docker-compose up` or `docker-compose up -d` for detached mode.
+`docker-compose up` or `docker-compose up -d` for detached mode. (This may take some time the first time)
 
 This will setup 2 docker containers, one running the API and one for MongoDB. 
 
@@ -199,3 +199,9 @@ These tests verify that the **FlightsRequestRepository** is performing the appro
 
 
 **NOTE:** Test coverage is not optimal, given more time, more unit tests should be added to cover all the business logic components of the application and more integration tests should be added to test the entire flow of request storage as well as the retrieve flights flow.
+
+
+## Teardown the docker environment
+
+To teardown the docker containers, images and volumes, simply go back to the directory containing the docker-compose.yaml file and execute `docker-compose down` followed by `docker system prune -a --volumes`.
+This will delete all stopped containers, and images and volumes not currently being used so remember to watch out for any other docker resources you may need so they don't get tore down.
