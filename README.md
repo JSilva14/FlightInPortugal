@@ -114,8 +114,74 @@ In this case, the database used is MongoDB.
 **How is request data stored:**
 
 Requests made to a controller can be intercepted using **org.springframework.web.servlet.handler.HandlerInterceptorAdapter**.
+In order to achieve this, a **FlightInfoApiInterceptor** (which extends **HandlerInterceptorAdapter**) was created and registered in **WebConfiguration**
 
 - When a request is made to "/flights" or "/flights/avg", it is intercepted by **FlightInfoApiInterceptor**.
 - By overriding **HandlerInterceptorAdapter's afterCompletion** method, it is possible to get information about the request and the response.
-- This information is used to create and instance of **FlightApiRequestEntity** which is stored in MongoDb by calling the **FlightsRequestRepository** interface which extends **org.springframework.data.mongodb.repository.MongoRepository**.
+- This information is used to create an instance of **FlightApiRequestEntity** which is stored in MongoDb by calling the **save** method in **FlightsRequestRepository** interface which extends **org.springframework.data.mongodb.repository.MongoRepository**.
 
+**Error Handling: **
+
+- If an Exception occurs during any point in the processes described below, it gets propagated back to the controller and handled automatically by **FlightInfoApiControllerAdvice** using the @RestControllerAdvice and @ExceptionHandler annotations.
+- Whenever possible, Exceptions are caught and wrapped with custom Exceptions so that **FlightInfoApiControllerAdvice** knows how to handle them.
+- Basically **FlightInfoApiControllerAdvice** sees what kind of Exception it received and builds a response based on it.
+- In the example below we can see how **FlightInfoApiControllerAdvice** handles a **FlightCriteriaValidationException**:
+- 
+
+
+```java
+
+@ExceptionHandler({FlightCriteriaValidationException.class})
+  public ResponseEntity<FlightInfoApiError> handleFlightCriteriaValidationException(
+      FlightCriteriaValidationException e) {
+    log.error(e.getMessage(), e);
+    return new ResponseEntity<FlightInfoApiError>(
+        new FlightInfoApiError(HttpStatus.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
+  }
+```
+
+
+### Requests
+
+Used to retrieve information about or delete requests made to "Flights" endpoints.  
+
+**Basic Flow: **
+
+1. When a request is made to /requests or /requests/{id}, it is handled by Controller methods in **FlightInfoRequestController**.
+2. All of the controller make calls to the appropriate method in **FlightsRequestRepository**. Either findAll, findById, deleteAll, and deleteById.
+
+### API Caching
+
+Another one of the requirements of this challenge was to use cache on the API.
+
+**NOTE:** Caching was only added on the Requests component since it was not found to be appropriate on the Flights component. Let's say we have cached all flight data for flights between OPO->LIS between the dates 29/12/2019 and 30/12/2019.
+This will only be useful on the slim chance that another user requests information about flights for that specific criteria. If a user makes a request to get all flights between  OPO->LIS between the dates 29/12/2019 and **31/12/2019**, it would still be necessary to make a request to the external API.
+
+**How caching was implemented: **
+
+- To implement caching, @EnableCaching annotation was added to the FlightInfoApiApplication class.
+- In **FlightInfoRequestController**, **@Cacheable("request")** annotation was added to the **getApiRequestById** method. This makes it so that the result of the method for the specified id is added to the cache.
+- Ex: 
+	* When GET http://localhost:8080/requests/5dee6a2bd1db84664aa33a19 is received, initially the data will be retrieved from MongoDB and the result for this id will be added to the cache.
+	* If subsequent requests are made for this specific id, the information will be retrieved from the cache.
+- **@CacheEvict(cacheNames = "request", key = "#root.args")** annotation was added to the **deleteApiRequestById** method. This will cause the data for the specified request id to be removed from the cache when it is removed from the database.
+- **@CacheEvict(cacheNames = "request", allEntries = true)** annotation was added to the **deleteAllApiRequests** method. This will remove all data from the cache when all requests are removed from the database.
+
+
+### Tests
+
+#### Unit tests
+
+This project contains unit tests for the controller classes which can be found at src/test/java in the package com.flightinportugal.FlightInfoApi.controller
+
+These tests verify that the controllers return the appropriate response given some valid or invalid criteria.
+To make the test names self-explanatory, the naming convention used was {method being tested}_{conditions}_{Should do this}
+
+#### Integration tests
+
+Some integration tests were included for the Request persistence flow.
+
+These tests verify that the **FlightsRequestRepository** is performing the appropriate **save** and **find** operations when controller methods are called.
+
+
+**NOTE:** Test coverage is not optimal, given more time, more unit tests should be added to cover all the business logic components of the application and more integration tests should be added to test the entire flow of request storage as well as the retrieve flights flow.
