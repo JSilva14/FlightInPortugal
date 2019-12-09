@@ -1,0 +1,169 @@
+{
+	"info": {
+		"_postman_id": "e69c5b99-fd2d-48bf-8ce9-0cffc2b26c61",
+		"name": "FlightInfoApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Flights",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/flights?from=LIS&to=OPO&dateFrom=30/12/2019&dateTo=31/12/2019",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"flights"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "LIS"
+						},
+						{
+							"key": "to",
+							"value": "OPO"
+						},
+						{
+							"key": "dateFrom",
+							"value": "30/12/2019"
+						},
+						{
+							"key": "dateTo",
+							"value": "31/12/2019"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Average Flight Price",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/flights/avg?from=LIS&dateFrom=09/12/2019&dateTo=09/12/2019",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"flights",
+						"avg"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "LIS"
+						},
+						{
+							"key": "dateFrom",
+							"value": "09/12/2019"
+						},
+						{
+							"key": "dateTo",
+							"value": "09/12/2019"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Requests",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/requests",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete All Requests",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/requests",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Request By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/requests/123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"requests",
+						"123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Request By Id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/requests/5dedaf5de9fe84714318df5b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"requests",
+						"5dedaf5de9fe84714318df5b"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
