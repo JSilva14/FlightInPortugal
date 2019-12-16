@@ -46,6 +46,7 @@ This will setup 2 docker containers, one running the API and one for MongoDB.
 ~~After the jar has been created, the source code is removed from the container and the jar is executed.~~
 
 During the API container setup the **flightinfoapi.jar** will be copied into the container which will then execute it.
+
 **Note:** I am aware that this approach is not the best since normally, the .jar file would not be included in the repository. Also this will not run the tests before setting up the container.
 This approach is only meant to make the setup easier and quicker for testing purposes and does not reflect the way things would normally be handled in a Production environment.
 
@@ -53,7 +54,7 @@ This approach is only meant to make the setup easier and quicker for testing pur
 * MongoDB will be exposed on port **27017** of your local machine (This is only for testing purposes like connecting to the database through Robo3T)
 
 **IMPORTANT NOTE:** To successfully run the environment using docker, the mongodb connection string in  **src/main/resources/application.properties** must be set to:
-Â´spring.data.mongodb.uri=mongodb://mongodbÂ´
+ïspring.data.mongodb.uri=mongodb://mongodbï
 
 
 
