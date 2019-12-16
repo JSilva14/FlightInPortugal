@@ -17,11 +17,11 @@
 					}
 				],
 				"url": {
-					"raw": "localhost:8080/flights?from=LIS&to=OPO&dateFrom=30/12/2019&dateTo=31/12/2019",
+					"raw": "localhost:8070/flights?from=LIS&to=OPO&dateFrom=30/12/2019&dateTo=31/12/2019",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8070",
 					"path": [
 						"flights"
 					],
@@ -59,12 +59,12 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/flights/avg?from=LIS&dateFrom=09/12/2019&dateTo=09/12/2019",
+					"raw": "http://localhost:8070/flights/avg?from=LIS&dateFrom=30/12/2019&dateTo=31/12/2019",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8070",
 					"path": [
 						"flights",
 						"avg"
@@ -76,11 +76,11 @@
 						},
 						{
 							"key": "dateFrom",
-							"value": "09/12/2019"
+							"value": "30/12/2019"
 						},
 						{
 							"key": "dateTo",
-							"value": "09/12/2019"
+							"value": "31/12/2019"
 						}
 					]
 				}
@@ -93,12 +93,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/requests",
+					"raw": "http://localhost:8070/requests",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8070",
 					"path": [
 						"requests"
 					]
@@ -131,15 +131,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/requests/123",
+					"raw": "http://localhost:8070/requests/5df6d633a27f256393eaa496",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8070",
 					"path": [
 						"requests",
-						"123"
+						"5df6d633a27f256393eaa496"
 					]
 				}
 			},
@@ -151,15 +151,15 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/requests/5dedaf5de9fe84714318df5b",
+					"raw": "http://localhost:8070/requests/5df6d633a27f256393eaa496",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8070",
 					"path": [
 						"requests",
-						"5dedaf5de9fe84714318df5b"
+						"5df6d633a27f256393eaa496"
 					]
 				}
 			},
