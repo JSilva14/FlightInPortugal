@@ -54,7 +54,7 @@ This approach is only meant to make the setup easier and quicker for testing pur
 * MongoDB will be exposed on port **27017** of your local machine (This is only for testing purposes like connecting to the database through Robo3T)
 
 **IMPORTANT NOTE:** To successfully run the environment using docker, the mongodb connection string in  **src/main/resources/application.properties** must be set to:
-ïspring.data.mongodb.uri=mongodb://mongodbï
+**spring.data.mongodb.uri=mongodb://mongodb**
 
 
 
