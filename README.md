@@ -24,28 +24,43 @@ Clone the repository into your prefered directory.
 
 ## Deployment
 
-#### To execute the docker environment
+### * To execute the docker environment: 
 
-**In your terminal, navigate to the directory that contains the docker-compose.yaml file and execute the command:**
+**PRE-DEPLOYMENT**
 
-`docker-compose up` or `docker-compose up -d` for detached mode. (This may take some time the first time)
+1. Make sure there are no processes or other docker containers using ports 8070 or 27017 of your machine.
+	- In a terminal, execute `docker ps` to list any active containers.
+	- If there are active containers using the aforementioned ports, perform `docker stop <CONTAINER ID>`
+
+2. Make sure to fully remove any old docker artifacts of this application (containers, images, volumes and networks).
+	- The easiest way to do this is to `docker stop` all containers that are related to this application and then perform `docker system prune -a --volumes` 
+	
+
+**In your terminal, navigate to the "deployment" directory that contains the docker-compose.yaml file and execute the following command:**
+
+`docker-compose up` or `docker-compose up -d` for detached mode. (This may take a few minutes the first time)
 
 This will setup 2 docker containers, one running the API and one for MongoDB. 
 
-During the API container setup, the code is copied into the container and packaged using **mvn clean install** which will perform all the tests and build an executable jar.
-After the jar has been created, the source code is removed from the container and the jar is executed.
+~~During the API container setup, the code is copied into the container and packaged using **mvn clean install** which will perform all the tests and build an executable jar.~~
+~~After the jar has been created, the source code is removed from the container and the jar is executed.~~
 
-* The Api will be exposed on port **8080** of your local machine
-* MongoDB will be exposed on port **27017** of your local machine
+During the API container setup the **flightinfoapi.jar** will be copied into the container which will then execute it.
+**Note:** I am aware that this approach is not the best since normally, the .jar file would not be included in the repository. Also this will not run the tests before setting up the container.
+This approach is only meant to make the setup easier and quicker for testing purposes and does not reflect the way things would normally be handled in a Production environment.
+
+* The Api will be exposed on port **8070** of your local machine
+* MongoDB will be exposed on port **27017** of your local machine (This is only for testing purposes like connecting to the database through Robo3T)
 
 **IMPORTANT NOTE:** To successfully run the environment using docker, the mongodb connection string in  **src/main/resources/application.properties** must be set to:
 ´spring.data.mongodb.uri=mongodb://mongodb´
 
 
-#### To run using the IDE:
+
+### * To run or debug using the IDE:
 
 1. Edit the **spring.data.mongodb.uri** property in **application.properties**:
-	- If you have already performed `docker-compose up` you can use the dockerized MongoDB instance. Just remember to set the property spring.data.mongodb.uri=mongodb://localhost and stop the flightinfoapi container to prevent port conflicts: ´docker stop flightinfoapi´.  
+	- If you have already performed `docker-compose up` you can use the dockerized MongoDB instance. Just remember to set the property spring.data.mongodb.uri=mongodb://localhost. 
 	- For convenience, a Mongo Atlas instance has also been provided (check application.properties for more info).
 	
 2. Import the FlightInfoApi project into your IDE. If using Eclipse or SpringToolSuite it may be necessary to update the project:
@@ -53,33 +68,35 @@ After the jar has been created, the source code is removed from the container an
 
 3. Run as SpringBoot Application
 
+* In this case, the API will be hosted on port **8080** of your machine (This is meant to prevent port conflicts if the API docker container is still running)
+
 
 ## How to use
 
-After deploying the API open a browser and go to http://localhost:8080/swagger-ui
+After deploying the API open a browser and go to http://localhost:8070/swagger-ui (If running the API directly from the IDE, the port will be 8080)
  
 There you will see the api's Swagger page which contains 6 endpoints:
  
  * **FLIGHTS - Flight Information**
  	
-	- GET Flights (http://localhost:8080/flights)
+	- GET Flights (http://localhost:8070/flights)
 		- Retrieves a list of Flights based on the specified parameters.
 		- Ex: GET localhost:8080/flights?from=LIS&to=OPO&dateFrom=30/12/2019&dateTo=31/12/2019
 	
-	- GET Average Flight Prices (http://localhost:8080/flights)
+	- GET Average Flight Prices (http://localhost:8070/flights)
 		- Returns the average prices for the list of flights that match the specified parameters.
 		- Ex: GET localhost:8080/flights/avg?from=LIS&to=OPO&dateFrom=30/12/2019&dateTo=31/12/2019
 
  * **REQUESTS - Get info or delete requests made to the 'Flights' endpoints**
  	
-	- GET All Requests (http://localhost:8080/requests)
+	- GET All Requests (http://localhost:8070/requests)
 		- Retrieves a list of requests made to 'Flights' endpoints
 	
-	- GET Request By Id (http://localhost:8080/requests/{id})
+	- GET Request By Id (http://localhost:8070/requests/{id})
 		- Retrieves the request with the given id
 		- Ex: GET http://localhost:8080/requests/5dee6a2bd1db84664aa33a19
 		
-	- DELETE All Requests (http://localhost:8080/requests)	
+	- DELETE All Requests (http://localhost:8070/requests)	
 		- Deletes all request info from database
 		- DELETE http://localhost:8080/requests
 
