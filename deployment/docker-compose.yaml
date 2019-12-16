@@ -1,0 +1,33 @@
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------------
+version:  "3.7"
+
+services:
+  mongodb:
+    image: mongo
+    container_name: "mongodb"
+    ports:
+      - 27017:27017
+  flight-info-api:
+    image: flightinportugal/flightinfoapi
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: flightinfoapi
+    expose:
+      - 8080
+    ports:
+      - "8070:8080"
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+
+
